@@ -5,6 +5,11 @@ import axios from 'axios'; //used to fetch data from API
 
 class App extends Component {
 
+  //store the stadia data in a state
+  state = {
+    stadia: []
+  }
+
   //lifecycle events
   //call "drawMap" when React component mounts
   componentDidMount(){
@@ -20,12 +25,20 @@ class App extends Component {
   }
 
   initMap = () => {
-    // need "window." to allow browser to access google
+    // need "window." object to allow browser to access google
     let map = new window.google.maps.Map(document.getElementById('map'), {
     // center: {lat: -34.397, lng: 150.644}, //Sydney
     center: {lat: 53.883808, lng: -1.264729}, //Tad
     zoom: 12
     });
+
+    //from Marker with Google maps
+    var marker = new window.google.maps.Marker({
+    position: {lat: 53.883808, lng: -1.264729},
+    map: map,
+    title: 'Hello Small World!'
+  });
+
   }
 
 
@@ -58,6 +71,9 @@ class App extends Component {
   axios.get(endpoint + new URLSearchParams(parameters))
     //execute this callback when the Promise is resolved
     .then(response => {
+      this.setState({
+        stadia: response.data.response.venues
+      }) 
       console.log(response);
       // console.log(response.data.response.groups[0].items)
       console.log(response.data.response.venues)
