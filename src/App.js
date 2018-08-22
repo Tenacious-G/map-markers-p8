@@ -20,12 +20,11 @@ class App extends Component {
   }
 
   initMap = () => {
-  // function initMap() {
     // need "window." to allow browser to access google
     let map = new window.google.maps.Map(document.getElementById('map'), {
-      center: {lat: -34.397, lng: 150.644}, //Sydney
-     // center: {lat: 53.883808, lng: -1.264729}, //Tad
-      zoom: 8
+    // center: {lat: -34.397, lng: 150.644}, //Sydney
+    center: {lat: 53.883808, lng: -1.264729}, //Tad
+    zoom: 12
     });
   }
 
@@ -36,11 +35,12 @@ class App extends Component {
     const endpoint = "https://api.foursquare.com/v2/venues/search?"
     // details of a venue
     const parameters = {
-      ll: "-34.397" +","+"150.644",      
+      // ll: "-34.397" +","+"150.644", //Sydney
+      ll: "53.883808" +","+"-1.264729",     
       client_id: "ESXBILDONBRKSIT1W2OJIUALG5AJTT0FLPMLYZRAF3EI4XTT",
       client_secret: "G21WXNZHQBFNNT5PZDH3LW3EB5HEMTHHNZEQTALMKXV4I23T",
       // ll: "53.883808,-1.264729",
-      query: "food",
+      query: "sport",
       // near: "Sydney",
       v: "20180821"
     }
@@ -58,14 +58,12 @@ class App extends Component {
   axios.get(endpoint + new URLSearchParams(parameters))
     //execute this callback when the Promise is resolved
     .then(response => {
-      console.log(".then");
       console.log(response);
-      console.log(response.data.response.groups[0].items)
+      // console.log(response.data.response.groups[0].items)
+      console.log(response.data.response.venues)
       })
     //otherwise (complete the callback function)
     .catch(error => {
-      console.log(".catch");
-      console.log(endpoint + new URLSearchParams(parameters))
       console.log("Error with endpoint " + error )
     })
 
@@ -84,11 +82,6 @@ class App extends Component {
     );
   }
 }
-/*  <script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBeBRmkFyV9H18g29KyFlOy4rYBMKR1Qc8&callback=initMap"
-    async defer></script>
-    </script>
-*/
 
 function loadScript(url){
   //the reference to the script tag, select the first one
