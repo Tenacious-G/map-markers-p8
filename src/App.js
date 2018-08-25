@@ -5,16 +5,14 @@ import axios from 'axios'; //used to fetch data from API
 
 class App extends Component {
 
-  //store the stadia data in a state
+  //store the venues data in a state
   state = {
-    stadia: []
+    venues: []
   }
 
   //lifecycle events
-  //call "drawMap" when React component mounts
   componentDidMount(){
-    this.drawMap()
-    this.findVenue()
+    this.findVenues()
   }
   
   // must use arrow functions inside a react component, rather than using the function keyword
@@ -24,77 +22,65 @@ class App extends Component {
     window.initMap = this.initMap
   }
 
-  initMap = () => {
-    // need "window." object to allow browser to access google
-    let map = new window.google.maps.Map(document.getElementById('map'), {
-    // center: {lat: -34.397, lng: 150.644}, //Sydney
-    center: {lat: 53.883808, lng: -1.264729}, //Tad
-    zoom: 12
-    });
-
-    //from Marker with Google maps
-    var marker = new window.google.maps.Marker({
-    position: {lat: 53.883808, lng: -1.264729},
-    map: map,
-    title: 'Hello Small World!'
-  });
-
-  }
-
-
-  findVenue = () => {
+  findVenues = () => {
     // details about a venue including location, tips, and categories
-    // the foursquare API calls things like venues "endpoints"
-    const endpoint = "https://api.foursquare.com/v2/venues/search?"
+    // the Foursquare API calls things like venues "endpoints"
+    const endpoint = "https://api.foursquare.com/v2/venues/explore?"
     // details of a venue
     const parameters = {
-      // ll: "-34.397" +","+"150.644", //Sydney
-      ll: "53.883808" +","+"-1.264729",     
+      // essential parameters
+      //lat and long co-ordinates for Tadcaster
+      ll: "53.883808,-1.264729", 
       client_id: "ESXBILDONBRKSIT1W2OJIUALG5AJTT0FLPMLYZRAF3EI4XTT",
       client_secret: "G21WXNZHQBFNNT5PZDH3LW3EB5HEMTHHNZEQTALMKXV4I23T",
-      // ll: "53.883808,-1.264729",
-      query: "sport",
-      // near: "Sydney",
-      v: "20180821"
+      query: "stadium",
+      v: "20182408",
+      //optional parameters
+      //return no more than 20 results
+      limit: 20
     }
-          // essential parameters
-      // response fields
-      // radius: 10000, //in metres
-      // ll: '53.883808,-1.264729',
-      // limit: 1
-    // }
-
-
-  //add details to the venue
-  //Yahya tutorial - https://youtu.be/dAhMIF0fNpo
-
-  axios.get(endpoint + new URLSearchParams(parameters))
-    //execute this callback when the Promise is resolved
-    .then(response => {
-      this.setState({
-        stadia: response.data.response.venues
-      }) 
-      console.log(response);
-      // console.log(response.data.response.groups[0].items)
-      console.log(response.data.response.venues)
+    //add details to the venue
+    //used Yahya Elharony's tutorial - https://youtu.be/dAhMIF0fNpo
+    //"Get venues from Foursquare API in React"
+    axios.get(endpoint + new URLSearchParams(parameters))
+      //execute this callback when the Promise is resolved
+     .then(response => {
+        this.setState({
+          venues: response.data.response.groups[0].items
+          //the callback function drawMap() is used here to draw the markers
+          // only once the data has loaded from the Foursquare API
+        }, this.drawMap())
       })
-    //otherwise (complete the callback function)
-    .catch(error => {
-      console.log("Error with endpoint " + error )
-    })
-
+      //otherwise (complete the callback function)
+      .catch(error => {
+        console.log("Error with endpoint " + error )
+      })
   }
+
+    initMap = () => {
+    // need "window." object to allow browser to access google
+    let map = new window.google.maps.Map(document.getElementById('map'), {
+    center: {lat: 53.883808, lng: -1.264729}, //Tadcaster
+    zoom: 10
+    })
+    //loop over the state to produce Markers for each venue
+    this.state.venues.map(sportsPlaces => {
+        //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
+        let marker = new window.google.maps.Marker({
+        position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
+        map: map,
+        title: sportsPlaces.venue.name
+      })
+    })
+  }  
+  
   render() {
     return (
-
-
       // load static map using https://developers.google.com/maps/documentation/javascript/tutorial
       //code put inside "main" as "return" only returns one tag
       <main>
         <div id="map"></div>
       </main>
-
-
     );
   }
 }
