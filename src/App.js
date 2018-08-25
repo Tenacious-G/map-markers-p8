@@ -66,13 +66,15 @@ class App extends Component {
     center: {lat: 53.883808, lng: -1.264729}, //Tadcaster
     zoom: 10
     })
+          //adapted from InfoWindow with Google maps - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
+      let infowindow = new window.google.maps.InfoWindow({
+        //fill the content of the infoWindow only when it is clicked
+        // content: contentString
+      });
+
     //loop over the state to produce Markers for each venue
     this.state.venues.map(sportsPlaces => {
       let contentString = '<p>' + sportsPlaces.venue.name + '<br/>' + sportsPlaces.venue.location.address  + '<br/>' + sportsPlaces.venue.location.city + '</p>'
-      //adapted from InfoWindow with Google maps - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
-      let infowindow = new window.google.maps.InfoWindow({
-        content: contentString
-      });
 
       //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
       let marker = new window.google.maps.Marker({
@@ -82,6 +84,7 @@ class App extends Component {
     })
 
     marker.addListener('click', function() {
+      infowindow.setContent(contentString)
       infowindow.open(map, marker);
     });
 
