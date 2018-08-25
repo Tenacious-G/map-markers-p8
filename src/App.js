@@ -58,15 +58,13 @@ class App extends Component {
       })
   }
 
-
-
     initMap = () => {
     // need "window." object to allow browser to access google
     let map = new window.google.maps.Map(document.getElementById('map'), {
     center: {lat: 53.883808, lng: -1.264729}, //Tadcaster
     zoom: 10
     })
-          //adapted from InfoWindow with Google maps - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
+      //adapted from InfoWindow with Google maps - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
       let infowindow = new window.google.maps.InfoWindow({
         //fill the content of the infoWindow only when it is clicked
         // content: contentString
@@ -85,20 +83,24 @@ class App extends Component {
       })
 
     marker.addListener('click', function() {
+      //make marker bounce if it is still and vice-versa
       toggleBounce()
       infowindow.setContent(contentString)
       infowindow.open(map, marker);
     });
 
     //adapted from Marker Animations with Google Maps  https://developers.google.com/maps/documentation/javascript/examples/marker-animations
-    function toggleBounce() {
-      if (marker.getAnimation() !== null) {
-        marker.setAnimation(null);
-      } else {
-        marker.setAnimation(window.google.maps.Animation.BOUNCE);
-      }
-    }
-
+    
+        function toggleBounce() {
+          if (marker.getAnimation() !== null) {
+            marker.setAnimation(null);
+            // revert to the original icon when user wants to stop icon from bouncing
+            marker.setIcon('http://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi2.png')
+          } else {
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/purple-dot.png')
+            marker.setAnimation(window.google.maps.Animation.BOUNCE);      
+          }
+        }
     })
 
   }  
