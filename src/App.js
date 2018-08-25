@@ -78,15 +78,26 @@ class App extends Component {
 
       //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
       let marker = new window.google.maps.Marker({
-      position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
-      map: map,
-      title: sportsPlaces.venue.name
-    })
+        position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
+        map: map,
+        title: sportsPlaces.venue.name,
+        animation: window.google.maps.Animation.DROP
+      })
 
     marker.addListener('click', function() {
+      toggleBounce()
       infowindow.setContent(contentString)
       infowindow.open(map, marker);
     });
+
+    //adapted from Marker Animations with Google Maps  https://developers.google.com/maps/documentation/javascript/examples/marker-animations
+    function toggleBounce() {
+      if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+      } else {
+        marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      }
+    }
 
     })
 
