@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'; //used to fetch data from API
+// import InfoWindow from 'react.google.maps'
 
 class App extends Component {
 
@@ -57,6 +58,8 @@ class App extends Component {
       })
   }
 
+
+
     initMap = () => {
     // need "window." object to allow browser to access google
     let map = new window.google.maps.Map(document.getElementById('map'), {
@@ -65,13 +68,25 @@ class App extends Component {
     })
     //loop over the state to produce Markers for each venue
     this.state.venues.map(sportsPlaces => {
-        //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
-        let marker = new window.google.maps.Marker({
-        position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
-        map: map,
-        title: sportsPlaces.venue.name
-      })
+      let contentString = '<p>' + sportsPlaces.venue.name + '<br/>' + sportsPlaces.venue.location.address  + '<br/>' + sportsPlaces.venue.location.city + '</p>'
+      //adapted from InfoWindow with Google maps - https://developers.google.com/maps/documentation/javascript/examples/infowindow-simple
+      let infowindow = new window.google.maps.InfoWindow({
+        content: contentString
+      });
+
+      //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
+      let marker = new window.google.maps.Marker({
+      position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
+      map: map,
+      title: sportsPlaces.venue.name
     })
+
+    marker.addListener('click', function() {
+      infowindow.open(map, marker);
+    });
+
+    })
+
   }  
   
   render() {
