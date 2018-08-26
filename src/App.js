@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import axios from 'axios'; //used to fetch data from API
 // import InfoWindow from 'react.google.maps'
+
+//explicity read "google" global variable from "window"
+//const google = window.google;
 
 class App extends Component {
 
@@ -59,7 +62,7 @@ class App extends Component {
   }
 
     initMap = () => {
-    // need "window." object to allow browser to access google
+    // need "window." object to allow browser to access google variable
     let map = new window.google.maps.Map(document.getElementById('map'), {
     center: {lat: 53.883808, lng: -1.264729}, //Tadcaster
     zoom: 10
@@ -101,16 +104,32 @@ class App extends Component {
             marker.setAnimation(window.google.maps.Animation.BOUNCE);      
           }
         }
+
+        //         // Create the search box and link it to the UI element.
+        // var input = document.getElementById('pac-input');
+        // var searchBox = new google.maps.places.SearchBox(input);
+        // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // // Bias the SearchBox results towards current map's viewport.
+        // map.addListener('bounds_changed', function() {
+        //   searchBox.setBounds(map.getBounds());
+        // });
+
+        return "arrow function expects a value to be returned"
     })
 
   }  
   
   render() {
     return (
-      // load static map using https://developers.google.com/maps/documentation/javascript/tutorial
-      //code put inside "main" as "return" only returns one tag
+      /* load static map using https://developers.google.com/maps/documentation/javascript/tutorial
+      //code put inside "main" as "return" only returns one tag*/
       <main>
-        <div id="map"></div>
+        
+              /*// <input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>*/
+        <div id="map">
+
+        </div>
       </main>
     );
   }
