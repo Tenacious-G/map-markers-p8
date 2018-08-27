@@ -4,14 +4,11 @@ import './App.css';
 import axios from 'axios'; //used to fetch data from API
 // import InfoWindow from 'react.google.maps'
 
-//explicity read "google" global variable from "window"
-//const google = window.google;
-
 class App extends Component {
 
   //store the venues data in a state
   state = {
-    venues: []
+    buildings: [],
   }
 
   //lifecycle events
@@ -50,7 +47,7 @@ class App extends Component {
       //execute this callback when the Promise is resolved
      .then(response => {
         this.setState({
-          venues: response.data.response.groups[0].items
+          buildings: response.data.response.groups[0].items
           //the callback function drawMap() is used here to draw the markers
           // only once the data has loaded from the Foursquare API
         }, this.drawMap())
@@ -74,20 +71,21 @@ class App extends Component {
       });
 
     //loop over the state to produce Markers for each venue
-    this.state.venues.map(sportsPlaces => {
-      let contentString = '<p>' + sportsPlaces.venue.name + '<br/>' + sportsPlaces.venue.location.address  + '<br/>' + sportsPlaces.venue.location.city + '</p>'
+    this.state.buildings.map(sportyPlaces => {
+      let contentString = '<p>' + sportyPlaces.venue.name + '<br/>' + sportyPlaces.venue.location.address  + '<br/>' + sportyPlaces.venue.location.city + '</p>'
 
       //adapted from Marker with Google maps - https://developers.google.com/maps/documentation/javascript/markers
       let marker = new window.google.maps.Marker({
-        position: {lat: sportsPlaces.venue.location.lat, lng: sportsPlaces.venue.location.lng},
+        position: {lat: sportyPlaces.venue.location.lat, lng: sportyPlaces.venue.location.lng},
         map: map,
-        title: sportsPlaces.venue.name,
+        title: sportyPlaces.venue.name,
         animation: window.google.maps.Animation.DROP
       })
 
     marker.addListener('click', function() {
       //make marker bounce if it is still and vice-versa
       toggleBounce()
+      //show InfoWindow
       infowindow.setContent(contentString)
       infowindow.open(map, marker);
     });
@@ -104,31 +102,16 @@ class App extends Component {
             marker.setAnimation(window.google.maps.Animation.BOUNCE);      
           }
         }
-
-        //         // Create the search box and link it to the UI element.
-        // var input = document.getElementById('pac-input');
-        // var searchBox = new google.maps.places.SearchBox(input);
-        // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-        // // Bias the SearchBox results towards current map's viewport.
-        // map.addListener('bounds_changed', function() {
-        //   searchBox.setBounds(map.getBounds());
-        // });
-
         return "arrow function expects a value to be returned"
     })
+  }
 
-  }  
-  
   render() {
     return (
       /* load static map using https://developers.google.com/maps/documentation/javascript/tutorial
       //code put inside "main" as "return" only returns one tag*/
-      <main>
-        
-              /*// <input id="pac-input" class="controls" type="text" placeholder="Search Box"></input>*/
+      <main>        
         <div id="map">
-
         </div>
       </main>
     );
